@@ -73,5 +73,17 @@ def add_to_cart(
 
 @router.get("/{user_id}", response_model=List[CartItemOut])
 def view_cart(user_id: int, db: Session = Depends(get_db)):
-    items = db.query(CartItem).filter_by(user_id=user_id).all()
-    return items
+    if user_id <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid user ID"
+        )
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    return db.query(CartItem).filter_by(user_id=user_id).all()
