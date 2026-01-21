@@ -168,9 +168,32 @@ Otherwise, checkout fails with an error.
 
 ---
 
-## Admin APIs
+### Admin APIs
 
-### Get System Statistics
+#### 1️⃣ Generate Coupon (Conditional)
+
+```
+POST /admin/coupons/generate
+```
+
+**Behavior:**
+
+* Checks if global nth-order condition is satisfied
+* If satisfied and coupon not already generated for this cycle:
+
+  * Invalidates old coupons
+  * Generates coupon for nth-order user
+* If already generated:
+
+  * No-op / safe error
+* Does **not** bypass business rules
+
+> Note: Coupons are auto-generated during checkout.
+> This API exists to **explicitly satisfy assignment requirements** and mirrors the same logic.
+
+---
+
+#### Get System Statistics
 
 ```
 GET /admin/stats
@@ -180,8 +203,8 @@ Returns:
 
 * Total orders
 * Total revenue
-* Total discount amount
-* Total coupons generated
+* Total discounts
+* Total coupons
 * Used vs unused coupons
 
 ---
